@@ -1,32 +1,22 @@
 import './App.css';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 const color = (row) => (row % 2 ? "#C3C4C5" : "#F5F3F3");
 
-// function* yieldItem(index = 0) {
-//   const items = ["abc", "def", "ghi"]
-//   var si;
+const itemsGenerator  = (setItems) => {
+  ["nnn", "ooo", "ppp"].forEach((item) => {
+    console.log({item})
+    // setItems(prevState => prevState)
+    setTimeout(()=>setItems((prevState) => prevState.concat(item)), 1000)
+  })
+}
 
-//   if (index < items.length) {
-//     yield items[index]
-//     console.log('foo', index)
-//   } else {
-//     console.log('bar')
-//     return
-//   }
-
-//  setTimeout(function* () {
-//     console.log('flum')
-//     yield* yieldItem(index++)
-//   }, 1000);
-// }
-
-const MyList = ({ items }) => {
+const MyList = ({items}) => {
   var init = true;
-  var item;
   var i = 0;
 
-  <div className="row" display={init}>Working...</div>;
+
+  // <div className="row" display={init}>Working...</div>;
 
   return items.map((item) => {
     init = false;
@@ -49,12 +39,17 @@ const MyList = ({ items }) => {
 
 
 function App() {
-  // const gen = useRef(yieldItem())
+  const [items, setItems] = useState(['x', 'y']);
+
+  useEffect(() => {
+     itemsGenerator(setItems);
+  }, [])
+
 
   return (
     <div className="App">
       <header > HOWDY
-        <MyList {...{ items: ['a', 'b', 'c'] }} />
+        <MyList {...{items}}/>
       </header>
     </div>
   );
