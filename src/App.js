@@ -1,25 +1,38 @@
+/* eslint-disable no-unused-vars */
 import './App.css';
-import { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const color = (row) => (row % 2 ? "#C3C4C5" : "#F5F3F3");
+var delayCt = 1;
+const arr = ["nnn", "ooo", "ppp", "qqq"];
 
-const itemsGenerator  = (setItems) => {
-  ["nnn", "ooo", "ppp"].forEach((item) => {
-    console.log({item})
-    // setItems(prevState => prevState)
-    setTimeout(()=>setItems((prevState) => prevState.concat(item)), 1000)
+const itemsGenerator = (setItems) => {
+  arr.forEach((item) => {
+    setTimeout(() => setItems((prevState) => prevState.concat(item)), 1000 * delayCt++)
   })
 }
 
-const MyList = ({items}) => {
-  var init = true;
+const itemsGenerator2 = (setItems) => {
+  var index = 0;
+  while (index < arr.length) {
+    const thenTime = Date.now()
+    while (Date.now() - thenTime < 1000);  // tight wait loop
+    const item = arr[index++]
+    console.log({ item })
+    setItems((prevState) => prevState.concat(item))
+  }
+}
+
+const itemsGenerator3 = (setItems) => {
+  let worker = new Worker('itemsGenerator3.js')
+  worker.postMessage('Are you working?')
+  worker.onmessage = e => console.log(e.data)
+}
+
+const MyList = ({ items }) => {
   var i = 0;
 
-
-  // <div className="row" display={init}>Working...</div>;
-
   return items.map((item) => {
-    init = false;
     return <div
       className="row"
       style={{
@@ -42,14 +55,16 @@ function App() {
   const [items, setItems] = useState(['x', 'y']);
 
   useEffect(() => {
-     itemsGenerator(setItems);
+    itemsGenerator3(setItems)
+    //  itemsGenerator2(setItems);
+    // itemsGenerator(setItems);
   }, [])
 
 
   return (
     <div className="App">
       <header > HOWDY
-        <MyList {...{items}}/>
+        <MyList {...{ items }} />
       </header>
     </div>
   );
