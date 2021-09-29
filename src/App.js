@@ -25,8 +25,14 @@ const itemsGenerator2 = (setItems) => {
 
 const itemsGenerator3 = (setItems) => {
   let worker = new Worker('itemsGenerator3.js')
-  worker.postMessage('Are you working?')
-  worker.onmessage = e => console.log(e.data)
+  worker.postMessage('Go!')
+  worker.onmessage = e => {
+    if (/Kill me.*/.test(e.data)) {
+      worker.terminate();
+    } else {
+      setItems((prevState) => prevState.concat(e.data))
+    }
+  }
 }
 
 const MyList = ({ items }) => {
