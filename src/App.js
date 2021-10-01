@@ -35,6 +35,33 @@ const itemsGenerator3 = (setItems) => {
   }
 }
 
+function* itemTrueGenerator() {
+  var index = 0;
+  while (index < arr.length) {
+    const thenTime = Date.now()
+    while (Date.now() - thenTime < 1000);  // tight wait loop
+    const item = arr[index++]
+    yield item
+  }
+}
+
+const itemsGenerator4 = (setItems) => {
+  const it = itemTrueGenerator()
+  let item = it.next()
+
+  while (!item.done) {
+    const itemValue = item.value
+    console.log({ itemValue })
+    setItems(prevState => {
+      console.log({ prevState, itemValue })
+      prevState.concat(itemValue)
+    }
+    )
+    console.log('next')
+    item = it.next()
+  }
+}
+
 const MyList = ({ items }) => {
   var i = 0;
 
@@ -61,8 +88,9 @@ function App() {
   const [items, setItems] = useState(['x', 'y']);
 
   useEffect(() => {
+    // itemsGenerator4(setItems)
     itemsGenerator3(setItems)
-    //  itemsGenerator2(setItems);
+    //  setTimeout(()=>itemsGenerator2(setItems), 600);
     // itemsGenerator(setItems);
   }, [])
 
